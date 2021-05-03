@@ -9,6 +9,7 @@ The idea behind it is simple:
 ## Miscellaneous thoughts
 * It occurs to me that the User Meta Data doesn't have to be a struct. It can be, in fact, a contract, with mutable data. Something to think about.
 * Once authenticated, perhaps the user recieves a session token.
+* How to deal with password resets for those users who have forgotten their passwords.
 
 ## TODOs
 1. non-abstract contract inheriting base NFTSubscriber contract
