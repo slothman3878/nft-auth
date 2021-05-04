@@ -14,4 +14,5 @@ Contains 2 contracts
 * How to deal with password resets for those users who have forgotten their passwords.
 
 ## TODOs
-2. Relevent tests
+1. Relevent tests
+2. Demo frontend
