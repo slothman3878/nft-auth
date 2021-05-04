@@ -40,6 +40,11 @@ contract User is AbstractUser {
     return AbstractUser._isApprovedOrOwner(_msgSender(), _username2tokenId[username]);
   }
 
+  function setProfile(string calldata username, string calldata profile) external virtual {
+    require(authenticate(username), "User: set profile of unauthenticated user");
+    _tokenMetas[_username2tokenId[username]].profile = profile;
+  }
+
   function deleteAccount(string calldata username) external virtual {
     require(authenticate(username), "User: delete unauthenticated user");
     _burn(_username2tokenId[username]);

@@ -35,4 +35,9 @@ describe("AutographDapp contract", function() {
     expect(await instances.A.authenticate('B')).to.equal(false);
     expect(await instances.B.authenticate('B')).to.equal(true);
   });
+
+  it('Profile change test', async function() {
+    await instances.A.setProfile('A', 'hello world');
+    expect((await instances.main.tokenMeta(1)).profile).to.equal('hello world');
+  })
 })

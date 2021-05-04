@@ -8,6 +8,7 @@ import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 
 // Modified openzeppelin's ERC721 contract (essentially removal of any tokenURI related functions)
 // No longer are these tokens storing URIs, but a user's metadata.
+// Also, token transfers are negligible
 
 // Making the tokens enumerable for each owner isn't strictly speaking necessary.
 // The frontend only needs to authenticate based on username, password pair, and maybe msgSender.
@@ -116,27 +117,12 @@ abstract contract AbstractUser is Context, ERC165, IERC721 {
     emit Transfer(owner, address(0), tokenId);
   }
 
-  function _transfer(address from, address to, uint256 tokenId) internal virtual {
-    require(AbstractUser.ownerOf(tokenId) == from, "ERC721: transfer of token that is not own");
-    require(to != address(0), "ERC721: transfer to the zero address");
-
-    _beforeTokenTransfer(from, to ,tokenId);
-
-    // Clear approvals from previous owner
-    _approve(address(0), tokenId);
-
-    _balances[from] -= 1;
-    _balances[to] += 1;
-    _owners[tokenId] = to;
-    
-    emit Transfer(from, to, tokenId);
-  }
-
   function _approve(address to, uint256 tokenId) internal virtual {
     _tokenApprovals[tokenId] = to;
     emit Approval(AbstractUser.ownerOf(tokenId), to, tokenId);
   }
 
+  // By default Tokens cannot be recieved by contracts.
   function _checkOnTokenRecieved(address from, address to, uint256 tokenId, bytes memory _data) private returns (bool) {
     if (to.isContract()) { return false; }
     else { return true; }
