@@ -11,7 +11,7 @@ Contains 2 contracts
 2. `UserExample.sol` is an example User model implementing `AbstractUser.sol`
 
 ## Miscellaneous thoughts
-* How to deal with password resets for those users who have forgotten their passwords.
+* Including passwords into the implementation, and how to deal with password resets for those users who have forgotten their passwords.
 * It occurs to me that passwords aren't strictly necessary. All the frontend has to do is check that the user's wallet is connected, then check token ownership. Essentially, in this case the user is signing in with their wallet private key.
 * Consider <a href="https://publications.lib.chalmers.se/records/fulltext/256254/256254.pdf">this paper</a>.
 

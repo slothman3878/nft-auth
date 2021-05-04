@@ -34,5 +34,5 @@ describe("AutographDapp contract", function() {
     expect(await instances.B.authenticate('A')).to.equal(false);
     expect(await instances.A.authenticate('B')).to.equal(false);
     expect(await instances.B.authenticate('B')).to.equal(true);
-  })
+  });
 })
