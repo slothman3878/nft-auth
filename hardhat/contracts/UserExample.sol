@@ -12,7 +12,6 @@ contract User is AbstractUser {
 
   Counters.Counter private _counter; // Token Index counter. Equals to the number of tokens in total.
   mapping (uint256 => TokenMeta) private _tokenMetas;
-  mapping (string => bytes32) private _authPair; // username, password pair
   mapping (string => uint256) private _username2tokenId;
 
   struct TokenMeta{
@@ -20,25 +19,29 @@ contract User is AbstractUser {
     string profile;
   }
 
-  function register(string calldata username, string calldata password) external virtual override {
+  constructor () {
+    _counter.increment();
+  }
+
+  function name() external view virtual returns (string memory) { return "User Example"; }
+
+  function register(string calldata username) external virtual {
     require(!_exists(username), "User: username already exists");
     uint256 index = _counter.current();
     _safeMint(_msgSender(), index);
     // Start with empty profile
     _username2tokenId[username] = index;
     _setTokenMeta(index, TokenMeta(username,""));
-    _authPair[username] == keccak256(abi.encode(password));
     _counter.increment();
   }
 
-  function authenticate(string memory username, string memory password) public view virtual override returns (bool) {
+  function authenticate(string memory username) public view virtual returns (bool) {
     require(_exists(username), "User: authenticate nonexistent user");
-    return keccak256(abi.encode(password)) == _authPair[username];
+    return AbstractUser._isApprovedOrOwner(_msgSender(), _username2tokenId[username]);
   }
 
-  function deleteAccount(string calldata username, string calldata password) external virtual {
-    require(_exists(username), "User: delete nonexistent user");
-    require(authenticate(username,password), "User: delete unauthenticated user");
+  function deleteAccount(string calldata username) external virtual {
+    require(authenticate(username), "User: delete unauthenticated user");
     _burn(_username2tokenId[username]);
   }
 
@@ -53,6 +56,6 @@ contract User is AbstractUser {
   }
 
   function _exists(string memory username) internal view virtual returns (bool) {
-    return _authPair[username] != "";
+    return _exists(_username2tokenId[username]);
   }
 }

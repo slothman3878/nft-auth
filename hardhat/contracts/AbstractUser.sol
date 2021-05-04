@@ -25,10 +25,6 @@ abstract contract AbstractUser is Context, ERC165, IERC721 {
   mapping (uint256 => address) private _tokenApprovals;
   mapping (address => mapping (address => bool)) private _operatorApprovals;
 
-  function register(string calldata username, string calldata password) external virtual;
-
-  function authenticate (string calldata username, string calldata password) external virtual returns (bool);
-
   function balanceOf(address owner) external virtual override view returns (uint256 balance) {
     require(owner != address(0), "ERC721: balance query for the zero address");
     return _balances[owner];
@@ -90,6 +86,12 @@ abstract contract AbstractUser is Context, ERC165, IERC721 {
     _owners[tokenId] = to;
 
     emit Transfer(address(0), to, tokenId);
+  }
+
+  function _isApprovedOrOwner(address spender, uint256 tokenId) internal view virtual returns (bool) {
+    require(_exists(tokenId), "ERC721: operator query for nonexistent token");
+    address owner = AbstractUser.ownerOf(tokenId);
+    return (spender == owner || getApproved(tokenId) == spender || isApprovedForAll(owner, spender));
   }
 
   function _safeMint(address to, uint256 tokenId) internal virtual {
