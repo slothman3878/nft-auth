@@ -2,10 +2,8 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 
 // Modified openzeppelin's ERC721 contract (essentially removal of any tokenURI related functions)
@@ -20,7 +18,6 @@ import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 // keccak256 does a basic job of hashing and hence ensuring the safety of passwords.
 abstract contract AbstractUser is Context, ERC165, IERC721 {
   using Address for address;
-  using Strings for uint256;
 
   mapping (uint256 => address) private _owners;
   mapping (address => uint256) private _balances;
@@ -28,9 +25,9 @@ abstract contract AbstractUser is Context, ERC165, IERC721 {
   mapping (uint256 => address) private _tokenApprovals;
   mapping (address => mapping (address => bool)) private _operatorApprovals;
 
-  function register(address user, string memory username, string memory password) external virtual;
+  function register(string calldata username, string calldata password) external virtual;
 
-  function authenticate (string memory username, string memory password) external virtual returns (bool);
+  function authenticate (string calldata username, string calldata password) external virtual returns (bool);
 
   function balanceOf(address owner) external virtual override view returns (uint256 balance) {
     require(owner != address(0), "ERC721: balance query for the zero address");
@@ -73,11 +70,11 @@ abstract contract AbstractUser is Context, ERC165, IERC721 {
 
   // The transfer functions are necessary for inheriting IERC721.
   // That being said, as an implementation of a User model, transfer of the tokens are usually unnecessary.
-  function transferFrom(address from, address to, uint256 tokenId) public virtual override;
+  function transferFrom(address from, address to, uint256 tokenId) public virtual override {}
 
-  function safeTransferFrom(address from, address to, uint256 tokenId) public virtual override;
+  function safeTransferFrom(address from, address to, uint256 tokenId) public virtual override {}
 
-  function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data) public virtual override;
+  function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data) public virtual override {}
 
   function _exists(uint256 tokenId) internal view virtual returns (bool) {
     return _owners[tokenId] != address(0);
