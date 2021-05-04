@@ -14,5 +14,4 @@ Contains 2 contracts
 * How to deal with password resets for those users who have forgotten their passwords.
 
 ## TODOs
-1. non-abstract contract inheriting base NFTSubscriber contract
 2. Relevent tests
